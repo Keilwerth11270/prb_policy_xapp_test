@@ -1,0 +1,21 @@
+{
+    "type":"object",
+    "additionalProperties":false,
+    "required":["policy_type_id", "policy_instance_id", "operation"],
+    "properties":{
+        "policy_type_id":{
+            "type":"string",
+            "enum":["20008"]
+        },
+        "policy_instance_id":{
+            "type":"string"
+        },
+        "operation":{
+            "type":"string",
+            "enum":["CREATE", "UPDATE", "DELETE"]
+        },
+        "payload":{
+            "type":"string"
+        }
+    }
+}

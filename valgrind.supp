@@ -1,0 +1,14 @@
+# pass this file to Valgrind to suppress RMR-related leaks
+# use valgrind --suppressions=path/to/this/file.supp
+{
+  suppress_rmr_lib
+  Memcheck:Leak
+  ...
+  obj:/usr/local/lib/librmr_si.*
+}
+{
+  suppress_mdclog_lib
+  Memcheck:Leak
+  ...
+  obj:/usr/lib/x86_64-linux-gnu/libmdclog.*
+}

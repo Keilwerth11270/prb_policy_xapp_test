@@ -1,0 +1,28 @@
+{
+    "$schema":"http://json-schema.org/draft-07/schema#",
+    "type":"object",
+    "additionalProperties":false,
+    "required":["ue_rc"],
+    "properties":{
+        "ue_rc": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "ue_index": {
+                        "type": "integer"
+                    },
+                    "max_prb": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "ue_index",
+                    "max_prb"
+                ]
+            },
+            "minItems": 1,
+            "maxItems": 2
+        }
+    }
+}
