@@ -28,6 +28,7 @@
 #include "e2sm_subscription.hpp"
 #include "msgs_proc.hpp"
 #include "e2sm_indication.hpp"
+#include "GlobalNgENB-ID.h"
 
 using namespace utility;
 using namespace web;
