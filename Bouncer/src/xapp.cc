@@ -100,72 +100,212 @@ void Xapp::startup(SubscriptionHandler &sub_ref) {
 }
 
 void Xapp::send_hardcoded_policy() {
+    // This line declares the `send_hardcoded_policy()` function as a member function of the `Xapp` class.
+    // The function takes no parameters and returns no value (void).
+    // Its purpose is to send a hardcoded policy to the gNB at regular intervals.
+
     while (true) {
-        // Create a hardcoded policy with the same structure as the one expected from A1
-        // This is done using the oran::service_message protobuf structure
+        // This line starts an infinite loop using the `while` keyword and the condition `true`.
+        // The loop will continue executing until the program is terminated or an explicit break statement is encountered.
+        // The purpose of the infinite loop is to continuously send the hardcoded policy at regular intervals.
+
         oran::service_message message;
+        // This line creates an instance of the `oran::service_message` class named `message`.
+        // The `oran::service_message` class is likely defined in a protocol buffer (protobuf) definition file
+        // and represents the structure of the service message used for communication between the xApp and the gNB.
+        // Creating an instance of this class allows us to populate it with the necessary data for the hardcoded policy.
+
         message.set_type(1);  // Set the message type to 1 (you can adjust this based on your requirements)
+        // This line sets the type of the `message` object to `1` using the `set_type()` function.
+        // The message type is an integer value that identifies the specific type of message being sent.
+        // The comment suggests that you can adjust this value based on your specific requirements.
+        // Changing the message type would alter the interpretation of the message by the receiving entity (gNB).
 
-        // Add hardcoded UE and PRB allocation data to the message
-        // This is just an example, you can modify the values and add more UEs as needed
         oran::rc_per_ue *rc = message.add_ue_max_prb_allocations();  // Add a new UE entry to the message
+        // This line adds a new UE entry to the `message` object using the `add_ue_max_prb_allocations()` function.
+        // The function returns a pointer to an `oran::rc_per_ue` object, which represents the resource allocation information for a specific UE.
+        // The pointer is stored in the `rc` variable.
+        // Adding multiple UE entries to the message would allow for specifying resource allocations for different UEs.
+
         rc->set_ue_index(1);  // Set the UE index to 1 (you can change this)
+        // This line sets the UE index of the `rc` object to `1` using the `set_ue_index()` function.
+        // The UE index is an identifier for the specific UE being referred to.
+        // The comment suggests that you can change this value as needed.
+        // Changing the UE index would allow you to specify resource allocations for different UEs.
+
         rc->set_max_prb(10);  // Set the maximum PRB allocation for the UE to 10 (you can change this)
+        // This line sets the maximum PRB (Physical Resource Block) allocation for the UE to `10` using the `set_max_prb()` function.
+        // The maximum PRB allocation determines the upper limit of resources that can be allocated to the UE.
+        // The comment suggests that you can change this value as needed.
+        // Modifying the maximum PRB allocation would affect the resource allocation for the specific UE.
 
-        // Serialize the message into a binary format
-        // This step is necessary to convert the protobuf message into a string that can be encoded and sent
         std::string serialized_message = message.SerializeAsString();
-        // If serialization fails, the program will continue to the next iteration of the loop
+        // This line serializes the `message` object into a binary format using the `SerializeAsString()` function.
+        // Serialization is the process of converting the structured data of the `message` object into a sequential byte stream that can be transmitted over the network.
+        // The serialized message is stored in the `serialized_message` variable as a string.
+        // If serialization fails, the program will continue to the next iteration of the loop.
 
-        // Encode the serialized message using ASN.1
-        // This step is required to encode the message in the format expected by the E2 interface
         E2AP_PDU_t *e2ap_pdu = (E2AP_PDU_t *)calloc(1, sizeof(E2AP_PDU));  // Allocate memory for the E2AP_PDU structure
-        // If memory allocation fails, the program will continue to the next iteration of the loop
+        // This line allocates memory for an `E2AP_PDU_t` structure using the `calloc()` function.
+        // The `E2AP_PDU_t` structure represents the E2AP (E2 Application Protocol) PDU (Protocol Data Unit) that will be sent over the E2 interface.
+        // The `calloc()` function allocates memory for one instance of the structure and initializes it to zero.
+        // The allocated memory is cast to a pointer of type `E2AP_PDU_t*` and stored in the `e2ap_pdu` variable.
+        // If memory allocation fails, the program will continue to the next iteration of the loop.
+
         ASN_STRUCT_RESET(asn_DEF_E2AP_PDU, e2ap_pdu);  // Reset the E2AP_PDU structure to its default values
+        // This line resets the `e2ap_pdu` structure to its default values using the `ASN_STRUCT_RESET()` macro.
+        // The macro takes the ASN.1 type definition (`asn_DEF_E2AP_PDU`) and the pointer to the structure (`e2ap_pdu`) as arguments.
+        // Resetting the structure ensures that any previous values are cleared and the structure is in a known default state before populating it with new data.
 
-        // Populate the E2AP_PDU structure with the necessary fields
         e2ap_pdu->present = E2AP_PDU_PR_initiatingMessage;  // Set the presence field to indicate an initiating message
-        e2ap_pdu->choice.initiatingMessage.procedureCode = ProcedureCode_id_RICcontrol;  // Set the procedure code to RICcontrol
-        e2ap_pdu->choice.initiatingMessage.criticality = Criticality_ignore;  // Set the criticality to ignore
-        e2ap_pdu->choice.initiatingMessage.value.present = InitiatingMessage__value_PR_RICcontrolRequest;  // Set the message type to RICcontrolRequest
+        // This line sets the `present` field of the `e2ap_pdu` structure to `E2AP_PDU_PR_initiatingMessage`.
+        // The `present` field is an enumeration that indicates the presence of a specific type of message within the E2AP PDU.
+        // Setting it to `E2AP_PDU_PR_initiatingMessage` specifies that the PDU contains an initiating message.
+        // Changing this value would alter the interpretation of the PDU by the receiving entity (gNB).
 
-        // Populate the RICcontrolRequest structure with the encoded policy message
+        e2ap_pdu->choice.initiatingMessage.procedureCode = ProcedureCode_id_RICcontrol;  // Set the procedure code to RICcontrol
+        // This line sets the `procedureCode` field of the `initiatingMessage` choice within the `e2ap_pdu` structure to `ProcedureCode_id_RICcontrol`.
+        // The `procedureCode` field identifies the specific procedure being initiated.
+        // Setting it to `ProcedureCode_id_RICcontrol` indicates that the message is related to the RIC (RAN Intelligent Controller) control procedure.
+        // Modifying this value would change the procedure associated with the message.
+
+        e2ap_pdu->choice.initiatingMessage.criticality = Criticality_ignore;  // Set the criticality to ignore
+        // This line sets the `criticality` field of the `initiatingMessage` choice within the `e2ap_pdu` structure to `Criticality_ignore`.
+        // The `criticality` field specifies the criticality of the message, which determines how the receiving entity should handle any errors or unknown information in the message.
+        // Setting it to `Criticality_ignore` indicates that the receiving entity can ignore any errors or unknown information.
+        // Changing this value would modify the error handling behavior of the receiving entity.
+
+        e2ap_pdu->choice.initiatingMessage.value.present = InitiatingMessage__value_PR_RICcontrolRequest;  // Set the message type to RICcontrolRequest
+        // This line sets the `present` field of the `value` choice within the `initiatingMessage` choice of the `e2ap_pdu` structure to `InitiatingMessage__value_PR_RICcontrolRequest`.
+        // The `present` field indicates the specific type of message contained within the `initiatingMessage`.
+        // Setting it to `InitiatingMessage__value_PR_RICcontrolRequest` specifies that the message is a RIC control request.
+        // Modifying this value would change the type of message being sent.
+
         RICcontrolRequest_t *ric_control_request = &e2ap_pdu->choice.initiatingMessage.value.choice.RICcontrolRequest;  // Get a pointer to the RICcontrolRequest structure
+        // This line obtains a pointer to the `RICcontrolRequest` structure within the `e2ap_pdu` structure.
+        // The `RICcontrolRequest` structure represents the specific content of the RIC control request message.
+        // The pointer is obtained by accessing the appropriate fields within the `e2ap_pdu` structure and is stored in the `ric_control_request` variable.
+        // This allows for convenient access to the `RICcontrolRequest` structure for further processing.
+
         ric_control_request->protocolIEs.list.count = 1;  // Set the count of protocol IEs to 1
+        // This line sets the `count` field of the `list` within the `protocolIEs` field of the `ric_control_request` structure to `1`.
+        // The `protocolIEs` field is a list that contains protocol IEs (Information Elements) associated with the RIC control request message.
+        // Setting the `count` to `1` indicates that there is one protocol IE in the list.
+        // Modifying this value would change the number of protocol IEs included in the message.
+
         ric_control_request->protocolIEs.list.array = (RICcontrolRequest_IEs_t *)calloc(1, sizeof(RICcontrolRequest_IEs_t));  // Allocate memory for the protocol IEs array
-        // If memory allocation fails, the program will continue to the next iteration of the loop
+        // This line allocates memory for the `array` field within the `list` of the `protocolIEs` field of the `ric_control_request` structure.
+        // The `array` field is an array that holds the actual protocol IEs.
+        // The `calloc()` function is used to allocate memory for one instance of the `RICcontrolRequest_IEs_t` structure, which represents a single protocol IE.
+        // The allocated memory is cast to a pointer of type `RICcontrolRequest_IEs_t*` and assigned to the `array` field.
+        // If memory allocation fails, the program will continue to the next iteration of the loop.
 
         ric_control_request->protocolIEs.list.array[0].id = ProtocolIE_ID_id_RICcontrolMessage;  // Set the protocol IE ID to RICcontrolMessage
+        // This line sets the `id` field of the first element (index 0) of the `array` within the `list` of the `protocolIEs` field of the `ric_control_request` structure to `ProtocolIE_ID_id_RICcontrolMessage`.
+        // The `id` field identifies the specific type of protocol IE.
+        // Setting it to `ProtocolIE_ID_id_RICcontrolMessage` indicates that the protocol IE contains the RIC control message.
+        // Changing this value would alter the interpretation of the protocol IE by the receiving entity.
+
         ric_control_request->protocolIEs.list.array[0].criticality = Criticality_reject;  // Set the criticality to reject
+        // This line sets the `criticality` field of the first element (index 0) of the `array` within the `list` of the `protocolIEs` field of the `ric_control_request` structure to `Criticality_reject`.
+        // The `criticality` field specifies the criticality of the protocol IE, which determines how the receiving entity should handle any errors or unknown information related to the IE.
+        // Setting it to `Criticality_reject` indicates that the receiving entity should reject the message if it encounters any errors or unknown information in the IE.
+        // Modifying this value would change the error handling behavior for the specific protocol IE.
+
         ric_control_request->protocolIEs.list.array[0].value.present = RICcontrolRequest_IEs__value_PR_RICcontrolMessage;  // Set the value type to RICcontrolMessage
+        // This line sets the `present` field of the `value` choice within the first element (index 0) of the `array` within the `list` of the `protocolIEs` field of the `ric_control_request` structure to `RICcontrolRequest_IEs__value_PR_RICcontrolMessage`.
+        // The `present` field indicates the specific type of value contained within the protocol IE.
+        // Setting it to `RICcontrolRequest_IEs__value_PR_RICcontrolMessage` specifies that the value is a RIC control message.
+        // Changing this value would alter the interpretation of the protocol IE value by the receiving entity.
 
         OCTET_STRING_t *ric_control_message = &ric_control_request->protocolIEs.list.array[0].value.choice.RICcontrolMessage;  // Get a pointer to the RICcontrolMessage octet string
+        // This line obtains a pointer to the `RICcontrolMessage` octet string within the `value` choice of the first element (index 0) of the `array` within the `list` of the `protocolIEs` field of the `ric_control_request` structure.
+        // The `RICcontrolMessage` octet string represents the actual content of the RIC control message.
+        // The pointer is obtained by accessing the appropriate fields within the `ric_control_request` structure and is stored in the `ric_control_message` variable.
+        // This allows for convenient access to the `RICcontrolMessage` octet string for further processing.
+
         ric_control_message->buf = (uint8_t *)serialized_message.c_str();  // Set the buffer of the octet string to the serialized message
+        // This line sets the `buf` field of the `ric_control_message` octet string to the serialized message.
+        // The `buf` field is a pointer to the buffer that holds the actual data of the octet string.
+        // The `c_str()` function is used to obtain a pointer to the underlying character array of the `serialized_message` string, which is then cast to a pointer of type `uint8_t*` and assigned to the `buf` field.
+        // This effectively sets the content of the `RICcontrolMessage` octet string to the serialized message.
+
         ric_control_message->size = serialized_message.size();  // Set the size of the octet string to the size of the serialized message
+        // This line sets the `size` field of the `ric_control_message` octet string to the size of the serialized message.
+        // The `size` field specifies the length of the data in the octet string.
+        // The `size()` function is used to obtain the size of the `serialized_message` string, which is then assigned to the `size` field.
+        // This ensures that the size of the `RICcontrolMessage` octet string matches the actual size of the serialized message.
 
-        // Encode the E2AP_PDU using ASN.1
         uint8_t e2ap_buf[8192];  // Create a buffer to store the encoded message
-        size_t e2ap_buf_size = 8192;  // Set the size of the buffer
-        asn_enc_rval_t enc_rval = asn_encode_to_buffer(nullptr, ATS_ALIGNED_BASIC_PER, &asn_DEF_E2AP_PDU, e2ap_pdu, e2ap_buf, e2ap_buf_size);  // Encode the E2AP_PDU into the buffer
-        // If encoding fails, enc_rval.encoded will be -1, and the program will skip the sending step
+        // This line declares a buffer named `e2ap_buf` of type `uint8_t` with a size of 8192 bytes.
+        // The buffer is used to store the encoded E2AP PDU message.
+        // The size of 8192 bytes is chosen to provide sufficient space for the encoded message.
+        // If the encoded message exceeds this size, it will result in a buffer overflow.
+        // Adjusting the buffer size may be necessary based on the expected size of the encoded message.
 
+        size_t e2ap_buf_size = 8192;  // Set the size of the buffer
+        // This line declares a variable `e2ap_buf_size` of type `size_t` and initializes it with the value 8192.
+        // The `e2ap_buf_size` variable represents the size of the `e2ap_buf` buffer.
+        // It is used to specify the available space in the buffer when encoding the E2AP PDU message.
+        // Modifying this value should be done in coordination with the size of the `e2ap_buf` buffer to ensure consistency.
+
+        asn_enc_rval_t enc_rval = asn_encode_to_buffer(nullptr, ATS_ALIGNED_BASIC_PER, &asn_DEF_E2AP_PDU, e2ap_pdu, e2ap_buf, e2ap_buf_size);  // Encode the E2AP_PDU into the buffer
+        // This line encodes the `e2ap_pdu` structure into the `e2ap_buf` buffer using the `asn_encode_to_buffer()` function.
+        // The function takes several parameters:
+        //   - `nullptr`: A pointer to the encoding constraints, which is not used in this case.
+        //   - `ATS_ALIGNED_BASIC_PER`: The encoding rule to be used
+	//   - `&asn_DEF_E2AP_PDU`: A pointer to the ASN.1 type definition of the E2AP PDU.
+        //   - `e2ap_pdu`: A pointer to the `e2ap_pdu` structure to be encoded.
+        //   - `e2ap_buf`: The buffer where the encoded message will be stored.
+        //   - `e2ap_buf_size`: The size of the `e2ap_buf` buffer.
+        // The encoded message is stored in the `e2ap_buf` buffer, and the encoding result is returned in the `enc_rval` structure.
+        // If encoding fails, `enc_rval.encoded` will be -1, and the program will skip the sending step.
+
+
+	    //  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	    //THE FOLLOWING CODE IS WHERE THERE COULD BE POTENTIAL ISSUES
+ 
         if (enc_rval.encoded == -1) {
             mdclog_write(MDCLOG_ERR, "Error encoding E2AP PDU");  // Log an error message if encoding fails
+            // This line checks if the encoding of the E2AP PDU failed by comparing `enc_rval.encoded` with -1.
+            // If encoding fails, an error message is logged using the `mdclog_write()` function with the `MDCLOG_ERR` log level.
+            // The error message indicates that there was an error encoding the E2AP PDU.
+            // If encoding fails, the program will continue to the next iteration of the loop without sending the message.
         } else {
             // Send the encoded message via the E2 interface
-            if (sockfd) {  // Check if the socket is valid
-                if (send(sockfd, e2ap_buf, enc_rval.encoded, 0) == -1) {  // Send the encoded message via the socket
-                    mdclog_write(MDCLOG_ERR, "Error :: Could not send message");  // Log an error message if sending fails
+            //if (sockfd) {  // Check if the socket is valid
+		
+                // THIS SECTION IS NOT ENTIRELY CORRECT
+ 
+                //if (send(sockfd, e2ap_buf, enc_rval.encoded, 0) == -1) {  // Send the encoded message via the socket
+                    //mdclog_write(MDCLOG_ERR, "Error :: Could not send message");  // Log an error message if sending fails
+		
+                    // This line sends the encoded message stored in `e2ap_buf` via the socket represented by `sockfd`.
+                    // The `send()` function is used to send the message, with the following parameters:
+                    //   - `sockfd`: The socket descriptor representing the socket used for sending the message.
+                    //   - `e2ap_buf`: The buffer containing the encoded message to be sent.
+                    //   - `enc_rval.encoded`: The size of the encoded message, obtained from the `encoded` field of the `enc_rval` structure.
+                    //   - `0`: Additional flags, which are not used in this case.
+                    // If sending the message fails, the `send()` function returns -1, indicating an error.
+                    // In case of an error, an error message is logged using the `mdclog_write()` function with the `MDCLOG_ERR` log level.
+                    // The error message indicates that the message could not be sent.
                 }
             }
         }
 
-        // Free the allocated memory to avoid memory leaks
         ASN_STRUCT_FREE(asn_DEF_E2AP_PDU, e2ap_pdu);
-
-        // Sleep for 30 seconds before sending the next policy
-        std::this_thread::sleep_for(std::chrono::seconds(30));  // Pause the loop for 30 seconds before sending the next policy
-    }
+        // This line frees the memory allocated for the `e2ap_pdu` structure using the `ASN_STRUCT_FREE()` macro.
+        // The macro takes the ASN.1 type definition (`asn_DEF_E2AP_PDU`) and the pointer to the structure (`e2ap_pdu`) as arguments.
+        // Freeing the memory is important to avoid memory leaks and ensure proper memory management.
+        // After freeing the memory, the `e2ap_pdu` structure should not be used anymore.
+ 
+        std::this_thread::sleep_for(std::chrono::seconds(30));  // Sleep for 30 seconds before sending the next policy
+        // This line introduces a delay of 30 seconds before sending the next policy.
+        // The `sleep_for()` function from the `std::this_thread` namespace is used to pause the execution of the current thread for the specified duration.
+        // The duration is specified using the `std::chrono::seconds` class, which represents a duration in seconds.
+        // Sleeping for 30 seconds ensures that there is a delay between consecutive policy transmissions.
+        // Adjusting the sleep duration allows you to control the frequency of policy transmissions.
+   }
 }
 
 void Xapp::start_xapp_receiver(XappMsgHandler& mp_handler, int threads){
