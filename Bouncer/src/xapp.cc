@@ -157,10 +157,12 @@ The xApp Startup Process:
 void Xapp::startup() {
 //void Xapp::startup(SubscriptionHandler &sub_ref) {
     // Step 1: Store the reference to the SubscriptionHandler object
-    //subhandler_ref = &sub_ref;
+    // subhandler_ref = &sub_ref;
 
-    // Step 2: Start the xApp receiver
-    start_xapp_receiver();
+    // Step 2: Start the xApp receiver --- BEING DONE IN b_xapp_main.cc THERE IS NO NEED TO RUN THIS FUNCTION FROM HERE
+	//How it is being run in that file:
+	//b_xapp->start_xapp_receiver(std::ref(*mp_handler), num_threads);
+    // start_xapp_receiver();
 
     // Step 3: Fetch the connected nodeB list
     fetch_connected_nodeb_list();
