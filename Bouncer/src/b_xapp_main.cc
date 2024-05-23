@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     b_xapp->start_xapp_receiver(std::ref(*mp_handler), num_threads);
     sleep(2); // Wait to allow Kubernetes DNS to notice this xApp before proceeding to startup routines
 
-    // Step 13: Startup E2 subscription
+    // Step 13: Startup xApp
     try {
 		// b_xapp->startup(sub_handler);
         b_xapp->startup();
@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Step 14: Wait for signals
+    // WHAT HAPPENS IF THERE ARE NO SIGNALS ??? ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     if (!sig_raised) {
         signal(SIGTERM, NULL); // Unregister async signal handler
         do {
