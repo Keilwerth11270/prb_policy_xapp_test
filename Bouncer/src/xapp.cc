@@ -199,7 +199,7 @@ void Xapp::startup(SubscriptionHandler &sub_ref) {
  * Parameters: None
  * Returns: a1_policy_helper object containing the false A1 policy payload
  */
-a1_policy_helper Xapp::create_false_a1_payload() {
+a1_policy_helper create_false_a1_payload() {
     // Step 1: Create an instance of the a1_policy_helper object
     //         This object will store the false A1 policy payload
     a1_policy_helper helper;
@@ -280,7 +280,7 @@ a1_policy_helper Xapp::create_false_a1_payload() {
  *   - helper: Reference to an a1_policy_helper object containing the policy information.
  * Returns: None
  */
-void Xapp::send_false_policy(a1_policy_helper& helper) {
+void send_false_policy(a1_policy_helper& helper) {
     // Step 1: Allocate memory for the slice-level PRB (Physical Resource Block) quota helper
     //         The quota helper is used to specify the maximum and minimum PRB values for each slice
     std::unique_ptr<e2sm_rc_slice_level_prb_quota_helper> quota_helper_ptr = std::make_unique<e2sm_rc_slice_level_prb_quota_helper>();
@@ -404,7 +404,7 @@ void Xapp::send_false_policy(a1_policy_helper& helper) {
 }
 
 
-void Xapp::send_hardcoded_policy() {
+void send_hardcoded_policy() {
 	
     // Create an instance of a1_policy_helper
 	a1_policy_helper helper = create_false_a1_payload();
