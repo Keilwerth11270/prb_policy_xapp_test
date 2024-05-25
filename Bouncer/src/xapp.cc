@@ -154,10 +154,10 @@ The xApp Startup Process:
  *   - sub_ref: Reference to the SubscriptionHandler object for handling subscriptions.
  * Returns: None
  */
-void Xapp::startup() {
+void Xapp::startup(SubscriptionHandler &sub_ref) {
 //void Xapp::startup(SubscriptionHandler &sub_ref) {
     // Step 1: Store the reference to the SubscriptionHandler object
-    // subhandler_ref = &sub_ref;
+    subhandler_ref = &sub_ref;
 
     // Step 2: Start the xApp receiver --- BEING DONE IN b_xapp_main.cc THERE IS NO NEED TO RUN THIS FUNCTION FROM HERE
 	//How it is being run in that file:
