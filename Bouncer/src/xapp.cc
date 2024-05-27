@@ -280,7 +280,7 @@ a1_policy_helper create_false_a1_payload() {
  *   - helper: Reference to an a1_policy_helper object containing the policy information.
  * Returns: None
  */
-void XappMsgHandler::send_false_policy(a1_policy_helper& helper) {
+void Xapp::send_false_policy(a1_policy_helper& helper) {
     // Step 1: Allocate memory for the slice-level PRB (Physical Resource Block) quota helper
     //         The quota helper is used to specify the maximum and minimum PRB values for each slice
     std::unique_ptr<e2sm_rc_slice_level_prb_quota_helper> quota_helper_ptr = std::make_unique<e2sm_rc_slice_level_prb_quota_helper>();
