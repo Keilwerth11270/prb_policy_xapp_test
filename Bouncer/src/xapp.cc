@@ -385,7 +385,7 @@ void XappMsgHandler::send_false_policy(a1_policy_helper& helper) {
             mdclog_write(MDCLOG_INFO, "Sending control request to %s", header.meid);
 
             // Step 5.19: Send the control request using the RMR protocol
-            bool sent = _ref_rmr->xapp_rmr_send(&header, (void *)message);
+            bool sent = rmr_ref->xapp_rmr_send(&header, (void *)message);
             free(message);
             if (!sent) {
                 mdclog_write(MDCLOG_ERR, "Unable to send control request to %s", header.meid);
