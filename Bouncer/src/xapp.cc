@@ -199,7 +199,7 @@ void Xapp::startup(SubscriptionHandler &sub_ref) {
  * Parameters: None
  * Returns: a1_policy_helper object containing the false A1 policy payload
  */
-a1_policy_helper create_false_a1_payload() {
+a1_policy_helper Xapp::create_false_a1_payload() {
     // Step 1: Create an instance of the a1_policy_helper object
     //         This object will store the false A1 policy payload
     a1_policy_helper helper;
@@ -404,7 +404,7 @@ void Xapp::send_false_policy(a1_policy_helper& helper) {
 }
 
 
-void send_hardcoded_policy() {
+void Xapp::send_hardcoded_policy() {
 	
     // Create an instance of a1_policy_helper
 	a1_policy_helper helper = create_false_a1_payload();
