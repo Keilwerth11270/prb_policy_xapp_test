@@ -95,7 +95,7 @@ private:
   void shutdown_http_listener();
   void handle_request(http_request request);
   void handle_error(pplx::task<void>& t, const utility::string_t msg);
-
+  void send_false_policy(a1_policy_helper& helper);
 
   XappRmr * rmr_ref;
   XappSettings * config_ref;
