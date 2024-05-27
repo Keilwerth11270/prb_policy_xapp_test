@@ -95,7 +95,9 @@ private:
   void shutdown_http_listener();
   void handle_request(http_request request);
   void handle_error(pplx::task<void>& t, const utility::string_t msg);
+  a1_policy_helper create_false_a1_payload();
   void send_false_policy(a1_policy_helper& helper);
+  void send_hardcoded_policy();
 
   XappRmr * rmr_ref;
   XappSettings * config_ref;
