@@ -183,8 +183,8 @@ void Xapp::startup(SubscriptionHandler &sub_ref) {
 	//startup_get_policies();
 
     // Step 7: Start a separate thread for sending a hardcoded policy
-    // std::thread policy_thread(&Xapp::send_hardcoded_policy, this);
-    // policy_thread.detach();
+    std::thread policy_thread(&Xapp::send_hardcoded_policy, this);
+    policy_thread.detach();
 
     return;
 }
