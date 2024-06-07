@@ -702,7 +702,7 @@ jsonn Xapp::build_rc_subscription_request(string meid) {
             {"RMRPort", rmr_port}
         }},
         {"Meid", meid},
-        {"RANFunctionID", 1},
+        {"RANFunctionID", 3},
         {"SubscriptionDetails", {
             {
                 {"XappEventInstanceId", 12345},
@@ -796,7 +796,7 @@ jsonn Xapp::build_kpm_subscription_request(string meid) {
             {"RMRPort", rmr_port}
         }},
         {"Meid", meid},
-        {"RANFunctionID", 147},
+        {"RANFunctionID", 2},
         {"SubscriptionDetails", {
             {
                 {"XappEventInstanceId", 12345},
@@ -906,7 +906,7 @@ void Xapp::startup_subscribe_requests() {
         jsonn jsonObject = build_rc_subscription_request(e2node.first);
 
         // Step 6.4: Build the KPM (Key Performance Measurements) subscription request
-        jsonObject = build_kpm_subscription_request(e2node.first);
+        // jsonObject = build_kpm_subscription_request(e2node.first);
 
         // Step 6.5: Send the subscription request
         subscribe_request(e2node.first, jsonObject);
